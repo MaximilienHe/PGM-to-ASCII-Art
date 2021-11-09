@@ -36,6 +36,7 @@ int main()
             }
         }
     }
+  
     // A partir du vecteur, on calcule la largeur * hauteur dans la variable tailleImage, et on stocke la largeur et la hauteur
     double tailleImage = 1, largeur, hauteur;
     size_t cptTaille = 0;
@@ -50,6 +51,29 @@ int main()
         cptTaille += 1;
     }
     std::cout << tailleImage;
+  
+    //Ouverture du fichier "ImageTest1.pgm" en mode binaire :
+    std::ifstream fichier("../ImagePGM/image1.pgm", std::ios_base::binary);
+
+    //Création d'une mémoire de tailleImage octets :
+    std::vector<char> donneesChar(tailleImage);
+  
+    //Lecture de tailleImage octets depuis le fichier et stockage dans le tableau donnees :
+    fichier.read(donneesChar.data(), tailleImage);
+  
+    //Convertion en un tableau de unsigned char
+    std::vector<unsigned char> donneesUnsignedChar;
+    donneesUnsignedChar.reserve(tailleImage);
+    for (const auto charSigned : donneesChar) {
+        donneesUnsignedChar.push_back(static_cast<unsigned char>(charSigned));
+    }
+  
+    //Convertion en un tableau de int
+    std::vector<int> donnees;
+    donnees.reserve(tailleImage);
+    for (const auto intValeur : donneesUnsignedChar) {
+        donnees.push_back(static_cast<int>(intValeur));
+    }
 
     // On parcourt les valeurs du vecteur donnees, et on les compare pour savoir si elles correspondent à W, w, l ...
     std::vector<std::string> donneesEnAscii;
