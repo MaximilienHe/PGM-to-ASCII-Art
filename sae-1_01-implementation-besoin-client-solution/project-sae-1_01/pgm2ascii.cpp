@@ -48,7 +48,7 @@ std::vector<double> recuperationMetadonnes(std::vector<double> taille)
 }
 
 // Fonction qui permet de récuperer les données du fichier sous forme d'un vecteur de int
-std::vector<int> recuperationDonneesDuFichier(std::ifstream& fichier, double tailleImage)
+std::vector<std::vector<int>> recuperationDonneesDuFichier(std::ifstream& fichier, double tailleImage, double hauteur, double largeur)
 {
     //Création d'une mémoire de tailleImage octets :
     std::vector<char> donneesChar(tailleImage);
@@ -64,46 +64,61 @@ std::vector<int> recuperationDonneesDuFichier(std::ifstream& fichier, double tai
     }
 
     //Convertion en un tableau de int
-    std::vector<int> donnees;
-    donnees.reserve(tailleImage);
+    std::vector<std::vector<int>> donnees;
+    donnees.reserve(hauteur);
+    std::vector<int> donneesLigne;
+    donneesLigne.reserve(largeur);
+    size_t cptValeur = 0;
     for (const auto intValeur : donneesUnsignedChar) {
-        donnees.push_back(static_cast<int>(intValeur));
+        donneesLigne.push_back(static_cast<int>(intValeur));
+        cptValeur++;
+        if (cptValeur == largeur) {
+            donnees.push_back(donneesLigne);
+            donneesLigne = {};
+            cptValeur = 0;
+        }
     }
 
     return donnees;
 }
 
 // Fonction qui permet de convertir le tableau de int en tableau de code ascii
-std::vector<std::string> convertirAvecPalette(std::vector<int> donnees, double tailleImage)
+std::vector<std::vector<std::string>> convertirAvecPalette(std::vector<std::vector<int>> donnees, double tailleImage, double hauteur, double largeur)
 {
     // On parcourt les valeurs du vecteur donnees, et on les compare pour savoir si elles correspondent à W, w, l ...
-    std::vector<std::string> donneesEnAscii;
-    donneesEnAscii.reserve(tailleImage);
-    for (auto parcourir : donnees) {
-        if (parcourir <= 31) {
-            donneesEnAscii.push_back("W");
+    std::vector<std::vector<std::string>> donneesEnAscii;
+    donneesEnAscii.reserve(hauteur);
+    std::vector<std::string> donneesEnAsciiLigne;
+    donneesEnAsciiLigne.reserve(largeur);
+    for (auto ligne : donnees) {
+        for (auto valeur : ligne) {
+            if (valeur <= 31) {
+                donneesEnAsciiLigne.push_back("W");
+            }
+            else if (valeur <= 63) {
+                donneesEnAsciiLigne.push_back("w");
+            }
+            else if (valeur <= 95) {
+                donneesEnAsciiLigne.push_back("l");
+            }
+            else if (valeur <= 127) {
+                donneesEnAsciiLigne.push_back("i");
+            }
+            else if (valeur <= 159) {
+                donneesEnAsciiLigne.push_back(":");
+            }
+            else if (valeur <= 191) {
+                donneesEnAsciiLigne.push_back(",");
+            }
+            else if (valeur <= 223) {
+                donneesEnAsciiLigne.push_back(".");
+            }
+            else if (valeur <= 255) {
+                donneesEnAsciiLigne.push_back(" ");
+            }
         }
-        else if (parcourir <= 63) {
-            donneesEnAscii.push_back("w");
-        }
-        else if (parcourir <= 95) {
-            donneesEnAscii.push_back("l");
-        }
-        else if (parcourir <= 127) {
-            donneesEnAscii.push_back("i");
-        }
-        else if (parcourir <= 159) {
-            donneesEnAscii.push_back(":");
-        }
-        else if (parcourir <= 191) {
-            donneesEnAscii.push_back(",");
-        }
-        else if (parcourir <= 223) {
-            donneesEnAscii.push_back(".");
-        }
-        else if (parcourir <= 255) {
-            donneesEnAscii.push_back(" ");
-        }
+        donneesEnAscii.push_back(donneesEnAsciiLigne);
+        donneesEnAsciiLigne = {};
     }
 
     return donneesEnAscii;

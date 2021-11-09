@@ -24,13 +24,13 @@ int main()
     double tailleImage = metaDonnes[0], largeur = metaDonnes[1], hauteur = metaDonnes[2];
 
     // Recuperation des données du fichier
-    std::vector<int> donnees = recuperationDonneesDuFichier(fichier, tailleImage);
+    std::vector<std::vector<int>> donnees = recuperationDonneesDuFichier(fichier, tailleImage, hauteur, largeur);
 
     // On parcourt les valeurs du vecteur donnees, et on les compare pour savoir si elles correspondent à W, w, l ...
-    std::vector<std::string> donneesEnAscii = convertirAvecPalette(donnees, tailleImage);
+    std::vector<std::vector<std::string>> donneesEnAscii = convertirAvecPalette(donnees, tailleImage, hauteur, largeur);
 
     // On parcourt le tableau donneesEnAscii pour afficher les valeurs, et afficher un \n si on atteint la taille de la largeur
-    affichageImageAscii(donneesEnAscii, largeur);
+    affichageImageAscii(donneesEnAscii);
 
     return 0;
 }

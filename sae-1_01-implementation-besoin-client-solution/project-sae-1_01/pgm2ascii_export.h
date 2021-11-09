@@ -2,4 +2,4 @@
 #include <iostream>
 #include "pgm2ascii.h"
 
-void affichageImageAscii(std::vector<std::string> donneesEnAscii, double largeur);
+void affichageImageAscii(std::vector<std::vector<std::string>> donneesEnAscii);
