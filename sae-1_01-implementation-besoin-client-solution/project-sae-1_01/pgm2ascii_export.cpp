@@ -10,3 +10,14 @@ void affichageImageAscii(std::vector<std::vector<std::string>> donneesEnAscii)
         std::cout << "\n";
     }
 }
+
+// Fonction qui exporte l'image en ascii dans un fichier texte
+void exportImageAsciiEnTxt(std::vector<std::vector<std::string>> donneesEnAscii, std::ofstream& exportFichier)
+{
+    for (auto ligne : donneesEnAscii) {
+        for (auto valeur : ligne) {
+            exportFichier << valeur;
+        }
+        exportFichier << "\n";
+    }
+}
