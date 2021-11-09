@@ -16,10 +16,21 @@ int main()
 #endif // WIN 32
 
     //Ouverture du fichier "imagetest.pgm" issu du dossier "ImagePGM" en mode binaire :
-    std::ifstream fichier("../ImagePGM/imagetest.pgm", std::ios_base::binary);
+    std::ifstream fichier("../ImagePGM/image1.pgm", std::ios_base::binary);
 
     // Création du fichier image2.txt pour stocker l'image finale
     std::ofstream exportFichier("imagetest.txt");
+
+    // Ouverture du fichier palette.txt issu du dossier "Platte-couleur" :
+    std::ifstream palette("../Palette-couleur/paletteUTF8.txt");
+
+    //Extraction des valeurs de la palette
+    std::vector<std::string> tableauPalette;
+    std::string valeurPalette;
+    while (!palette.eof()) {
+        std::getline(palette, valeurPalette);
+        tableauPalette.push_back(valeurPalette);
+    }
 
     //Décodage entête du fichier (4 lignes) dans un string "ligne"
     std::string ligne;
@@ -76,30 +87,15 @@ int main()
     // On parcourt les valeurs du vecteur donnees, et on les compare pour savoir si elles correspondent à W, w, l ...
     std::vector<std::string> donneesEnAscii;
     donneesEnAscii.reserve(tailleImage);
+    double ecart = 255 / tableauPalette.size(); 
+
     for (auto parcourir : donnees) {
-        if (parcourir <= 31) {
-            donneesEnAscii.push_back("W");
-        }
-        else if (parcourir <= 63) {
-            donneesEnAscii.push_back("w");
-        }
-        else if (parcourir <= 95) {
-            donneesEnAscii.push_back("l");
-        }
-        else if (parcourir <= 127) {
-            donneesEnAscii.push_back("i");
-        }
-        else if (parcourir <= 159) {
-            donneesEnAscii.push_back(":");
-        }
-        else if (parcourir <= 191) {
-            donneesEnAscii.push_back(",");
-        }
-        else if (parcourir <= 223) {
-            donneesEnAscii.push_back(".");
-        }
-        else if (parcourir <= 255) {
-            donneesEnAscii.push_back(" ");
+        for (size_t i = 1; i < tableauPalette.size(); i++) {
+            if (parcourir <= ecart * i) {
+                donneesEnAscii.push_back(tableauPalette[i]);
+                double ecart = 255 / tableauPalette.size();
+                break;
+            }
         }
     }
 
