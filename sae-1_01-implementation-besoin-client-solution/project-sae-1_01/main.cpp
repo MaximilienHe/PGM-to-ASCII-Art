@@ -16,21 +16,26 @@ int main()
     //Ouverture du fichier "image2.pgm" issu du dossier "ImagePGM" en mode binaire :
     std::ifstream fichier("../ImagePGM/image2.pgm", std::ios_base::binary);
 
-    // Création du fichier image2.txt pour stocker l'image finale
-    std::ofstream exportFichier("image-exporter.txt");
-
     // Decodage de l'entete dans un tableau taille
     std::vector<double> taille = decodageEntete(fichier);
 
-    // Recuperation des données de l'entete et stockage dans des variables
+    // Création du fichier image-exporter.txt pour stocker l'image finale
+    std::ofstream exportFichier("image-exporter.txt");
+
+    // Ouverture du fichier palette2.txt issu du dossier "Platte-couleur" :
+    std::ifstream palette("../Palette-couleur/palette2.txt");
+
+    //Extraction des valeurs de la palette
+    std::vector<std::string> tableauPalette = extractPalette(palette);
+  
     std::vector<double> metaDonnes = recuperationMetadonnes(taille);
     double tailleImage = metaDonnes[0], largeur = metaDonnes[1], hauteur = metaDonnes[2];
 
     // Recuperation des données du fichier
     std::vector<std::vector<int>> donnees = recuperationDonneesDuFichier(fichier, tailleImage, hauteur, largeur);
-
-    // On parcourt les valeurs du vecteur donnees, et on les compare pour savoir si elles correspondent à W, w, l ...
-    std::vector<std::vector<std::string>> donneesEnAscii = convertirAvecPalette(donnees, tailleImage, hauteur, largeur);
+  
+    // On parcourt les valeurs du vecteur donnees, et on les compare pour savoir si elles correspondent � W, w, l ...
+    std::vector<std::vector<std::string>> donneesEnAscii = convertirAvecPalette(donnees, tableauPalette, tailleImage, hauteur, largeur);
 
     // On parcourt le tableau donneesEnAscii pour créer un fichier texte qui contient l'image
     exportImageAsciiEnTxt(donneesEnAscii, exportFichier);
