@@ -140,7 +140,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\project-sae-1_01\pgm2ascii.cpp" />
+    <ClCompile Include="..\project-sae-1_01\pgm2ascii_export.cpp" />
     <ClCompile Include="tests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\project-sae-1_01\pgm2ascii.h" />
+    <ClInclude Include="..\project-sae-1_01\pgm2ascii_export.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

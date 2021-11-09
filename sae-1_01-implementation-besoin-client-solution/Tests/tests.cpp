@@ -2,11 +2,8 @@
 #include <windows.h>
 #endif // Win 32
 
-#include <fstream>
-#include <iostream>
-#include <vector>
-#include <string>
-#include <sstream>
+#include "../project-sae-1_01/pgm2ascii.h"
+#include "../project-sae-1_01/pgm2ascii_export.h"
 
 int main()
 {
@@ -16,7 +13,7 @@ int main()
 #endif // WIN 32
 
     //Ouverture du fichier "imagetest.pgm" issu du dossier "ImagePGM" en mode binaire :
-    std::ifstream fichier("../ImagePGM/image1.pgm", std::ios_base::binary);
+    std::ifstream fichier("../ImagePGM/image2.pgm", std::ios_base::binary);
 
     // Création du fichier image2.txt pour stocker l'image finale
     std::ofstream exportFichier("imagetest.txt");
@@ -64,25 +61,15 @@ int main()
         cptTaille += 1;
     }
 
-    //Création d'une mémoire de tailleImage octets :
-    std::vector<char> donneesChar(tailleImage);
+    // Decodage de l'entete dans un tableau taille
+    std::vector<double> taille = decodageEntete(fichier);
   
-    //Lecture de tailleImage octets depuis le fichier et stockage dans le tableau donnees :
-    fichier.read(donneesChar.data(), tailleImage);
-  
-    //Convertion en un tableau de unsigned char
-    std::vector<unsigned char> donneesUnsignedChar;
-    donneesUnsignedChar.reserve(tailleImage);
-    for (const auto charSigned : donneesChar) {
-        donneesUnsignedChar.push_back(static_cast<unsigned char>(charSigned));
-    }
-  
-    //Convertion en un tableau de int
-    std::vector<int> donnees;
-    donnees.reserve(tailleImage);
-    for (const auto intValeur : donneesUnsignedChar) {
-        donnees.push_back(static_cast<int>(intValeur));
-    }
+    // Recuperation des données de l'entete et stockage dans des variables
+    std::vector<double> metaDonnes = recuperationMetadonnes(taille);
+    double tailleImage = metaDonnes[0], largeur = metaDonnes[1], hauteur = metaDonnes[2];
+
+    // Recuperation des données du fichier
+    std::vector<int> donnees = recuperationDonneesDuFichier(fichier, tailleImage);
 
     // On parcourt les valeurs du vecteur donnees, et on les compare pour savoir si elles correspondent à W, w, l ...
     std::vector<std::string> donneesEnAscii;
@@ -109,4 +96,8 @@ int main()
             cptAffichage = 0;
         }
     }
+    std::vector<std::string> donneesEnAscii = convertirAvecPalette(donnees, tailleImage);
+
+    // On parcourt le tableau donneesEnAscii pour afficher les valeurs, et afficher un \n si on atteint la taille de la largeur
+    affichageImageAscii(donneesEnAscii, largeur);
 }
