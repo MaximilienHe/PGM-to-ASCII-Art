@@ -22,7 +22,7 @@ int main()
     std::ofstream exportFichier("imagetest.txt");
 
     // Ouverture du fichier palette.txt issu du dossier "Platte-couleur" :
-    std::ifstream palette("../Palette-couleur/palette2.txt");
+    std::ifstream palette("../Palette-couleur/palette2UTF8.txt");
 
     //Extraction des valeurs de la palette
     std::vector<std::string> tableauPalette = extractPalette(palette);
