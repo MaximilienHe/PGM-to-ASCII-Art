@@ -2,6 +2,7 @@
 #include <windows.h>
 #endif // Win 32
 
+#include <iostream>
 #include "../project-sae-1_01/pgm2ascii.h"
 #include "../project-sae-1_01/pgm2ascii_export.h"
 
@@ -12,8 +13,8 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
 #endif // WIN 32
 
-    //Ouverture du fichier "imagetest.pgm" issu du dossier "ImagePGM" en mode binaire :
-    std::ifstream fichier("../ImagePGM/image2.pgm", std::ios_base::binary);
+    //Ouverture du fichier "imagetest.pgm" issu du dossier "ImagePGM" en mode binaire (imagetest.pgm || image2.pgm || image1.pgm ) :
+    std::ifstream fichier("../ImagePGM/imagetest.pgm", std::ios_base::binary);
 
     // Decodage de l'entete dans un tableau taille
     std::vector<double> taille = decodageEntete(fichier);
@@ -21,8 +22,8 @@ int main()
     // Création du fichier image2.txt pour stocker l'image finale
     std::ofstream exportFichier("imagetest.txt");
 
-    // Ouverture du fichier palette.txt issu du dossier "Platte-couleur" :
-    std::ifstream palette("../Palette-couleur/palette2UTF8.txt");
+    // Ouverture du fichier palette.txt issu du dossier "Platte-couleur" (palette.txt || palette2.txt || paletteUTF8.txt || palette2UTF8.txt) :
+    std::ifstream palette("../Palette-couleur/paletteUTF8.txt");
 
     //Extraction des valeurs de la palette
     std::vector<std::string> tableauPalette = extractPalette(palette);
@@ -39,4 +40,5 @@ int main()
 
     // On parcourt le tableau donneesEnAscii pour créer un fichier texte qui contient l'image
     exportImageAsciiEnTxt(donneesEnAscii, exportFichier);
+    return 0;
 }
