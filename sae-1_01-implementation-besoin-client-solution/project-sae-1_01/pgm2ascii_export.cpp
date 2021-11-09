@@ -1,14 +1,12 @@
 #include "pgm2ascii_export.h"
 
-void affichageImageAscii(std::vector<std::string> donneesEnAscii, double largeur)
+// Fonction qui affiche l'image en ascii dans la console
+void affichageImageAscii(std::vector<std::vector<std::string>> donneesEnAscii)
 {
-    size_t cptAffichage = 0;
-    for (auto affichagefinal : donneesEnAscii) {
-        std::cout << affichagefinal;
-        cptAffichage += 1;
-        if (cptAffichage == largeur) {
-            std::cout << "\n";
-            cptAffichage = 0;
+    for (auto ligne : donneesEnAscii) {
+        for (auto valeur : ligne) {
+            std::cout << valeur;
         }
+        std::cout << "\n";
     }
 }
