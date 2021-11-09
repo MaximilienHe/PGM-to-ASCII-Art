@@ -20,6 +20,7 @@ std::vector<double> decodageEntete(std::ifstream& fichier)
             }
         }
     }
+
     return taille;
 }
 
@@ -83,38 +84,24 @@ std::vector<std::vector<int>> recuperationDonneesDuFichier(std::ifstream& fichie
 }
 
 // Fonction qui permet de convertir le tableau de int en tableau de code ascii
-std::vector<std::vector<std::string>> convertirAvecPalette(std::vector<std::vector<int>> donnees, double tailleImage, double hauteur, double largeur)
+std::vector<std::vector<std::string>> convertirAvecPalette(std::vector<std::vector<int>> donnees, std::vector<std::string> tableauPalette, double tailleImage, double hauteur, double largeur)
 {
     // On parcourt les valeurs du vecteur donnees, et on les compare pour savoir si elles correspondent à W, w, l ...
     std::vector<std::vector<std::string>> donneesEnAscii;
     donneesEnAscii.reserve(hauteur);
     std::vector<std::string> donneesEnAsciiLigne;
     donneesEnAsciiLigne.reserve(largeur);
+
+    double ecart = 255 / tableauPalette.size();
+
     for (auto ligne : donnees) {
         for (auto valeur : ligne) {
-            if (valeur <= 31) {
-                donneesEnAsciiLigne.push_back("W");
-            }
-            else if (valeur <= 63) {
-                donneesEnAsciiLigne.push_back("w");
-            }
-            else if (valeur <= 95) {
-                donneesEnAsciiLigne.push_back("l");
-            }
-            else if (valeur <= 127) {
-                donneesEnAsciiLigne.push_back("i");
-            }
-            else if (valeur <= 159) {
-                donneesEnAsciiLigne.push_back(":");
-            }
-            else if (valeur <= 191) {
-                donneesEnAsciiLigne.push_back(",");
-            }
-            else if (valeur <= 223) {
-                donneesEnAsciiLigne.push_back(".");
-            }
-            else if (valeur <= 255) {
-                donneesEnAsciiLigne.push_back(" ");
+            for (size_t i = 1; i < tableauPalette.size() + 1; i++) {
+                if (valeur <= ecart * i) {
+                    donneesEnAsciiLigne.push_back(tableauPalette[i - 1]);
+                    double ecart = 255 / tableauPalette.size();
+                    break;
+                }
             }
         }
         donneesEnAscii.push_back(donneesEnAsciiLigne);
@@ -122,4 +109,17 @@ std::vector<std::vector<std::string>> convertirAvecPalette(std::vector<std::vect
     }
 
     return donneesEnAscii;
+}
+
+// Fonction qui permet d'extraire dans un tableau la palette de couleur
+std::vector<std::string> extractPalette(std::ifstream& palette)
+{
+    std::vector<std::string> tableauPalette;
+    std::string valeurPalette;
+    while (!palette.eof()) {
+        std::getline(palette, valeurPalette);
+        tableauPalette.push_back(valeurPalette);
+    }
+
+    return tableauPalette;
 }
