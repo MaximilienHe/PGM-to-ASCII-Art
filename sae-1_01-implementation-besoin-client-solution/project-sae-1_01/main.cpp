@@ -16,6 +16,9 @@ int main()
     //Ouverture du fichier "image2.pgm" issu du dossier "ImagePGM" en mode binaire :
     std::ifstream fichier("../ImagePGM/image2.pgm", std::ios_base::binary);
 
+    // Création du fichier image2.txt pour stocker l'image finale
+    std::ofstream exportFichier("image-exporter.txt");
+
     // Decodage de l'entete dans un tableau taille
     std::vector<double> taille = decodageEntete(fichier);
 
@@ -30,7 +33,7 @@ int main()
     std::vector<std::vector<std::string>> donneesEnAscii = convertirAvecPalette(donnees, tailleImage, hauteur, largeur);
 
     // On parcourt le tableau donneesEnAscii pour afficher les valeurs, et afficher un \n si on atteint la taille de la largeur
-    affichageImageAscii(donneesEnAscii);
+    exportImageAsciiEnTxt(donneesEnAscii, exportFichier);
 
     return 0;
 }
